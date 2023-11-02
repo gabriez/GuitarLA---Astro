@@ -1,0 +1,22 @@
+---
+import '../styles/guitarra.css'
+import Layout from '../layouts/Layout.astro';
+import {getGuitars} from '../helpers/api-helper'
+import ListGuitars from '../components/guitars/ListGuitars.astro';
+
+
+const {data} = await getGuitars();
+
+
+---
+
+<Layout title="GuitarLA - Tienda" description="GuitarLA, blog, tienda de guitarras, venta de guitarras, cursos">
+	<main class="contenedor">
+        <h3 class="heading">Tienda</h3>
+        <ListGuitars data={data}/>
+    </main>
+</Layout>
+
+<style>
+    
+</style>

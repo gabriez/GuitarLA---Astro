@@ -1,0 +1,36 @@
+---
+import '../../styles/blog.css';
+import Layout from '../../layouts/Layout.astro';
+import { getPosts } from '../../helpers/api-helper';
+import { formatDate } from '../../helpers/helper';
+export async function getStaticPaths() {
+    const { data } = await getPosts();
+
+    return data.map(
+        post => ({
+            params: {
+                id: post.attributes.url
+            },
+            props: {
+                title: post.attributes.title,
+                content: post.attributes.content,
+                publishedAt: post.attributes.publishedAt,
+                image: post.attributes.image.data[0].attributes.url
+            }
+        })
+    )
+}
+
+const {title, content, publishedAt, image} = Astro.props;
+console.log(image)
+---
+<Layout title={`GuitarLA - ${title}`} description={`GuitarLA, guitarras venta de guitarras, entrada ${title}`}> 
+<article class="post mt-3">
+    <img class="imagen" src={image} alt={`Imagen de ${title}`} />
+    <div class="contenido">
+        <h3>{title}</h3>
+        <p class="fecha">{formatDate(publishedAt)}</p>
+        <p class="texto">{content}</p>
+    </div>
+</article>
+</Layout>

@@ -1,0 +1,30 @@
+---
+import '../../styles/guitarra.css'
+import { Image } from 'astro:assets';
+interface Props {
+    data: Array<Object>;
+}
+
+const { data } = Astro.props
+
+---
+
+<div class="guitarras-grid">
+    {
+        data.length > 0 &&
+        data.map( (guitarra : any)=> (
+            <div class="guitarra">
+                <Image width={1000} height={1000} src={guitarra?.attributes.image.data.attributes.formats.medium.url} 
+                alt={`Imagen de ${guitarra?.attributes.name}`} />
+                <div class="contenedor">
+                    <h3 class="heading">{guitarra?.attributes.name}</h3>
+                    <p class="description">{guitarra?.attributes.description}</p>
+                    <p class="price">${guitarra?.attributes.price}</p>
+                    <a class="enlace" href={`/tienda/${guitarra?.attributes.url}`}> Ver Producto </a>
+                </div>
+            </div>
+        ) )
+    }
+</div>
+
+<style></style>

@@ -1,0 +1,83 @@
+---
+import '../../styles/guitarra.css';
+import Layout from '../../layouts/Layout.astro';
+import { getGuitars } from '../../helpers/api-helper';
+export async function getStaticPaths() {
+    const { data } = await getGuitars();
+
+    return data.map(
+        guitarra => ({
+            params: {
+                id: guitarra.attributes.url
+            },
+            props: {
+                name: guitarra.attributes.name,
+                description: guitarra.attributes.description,
+                price: guitarra.attributes.price,
+                image: guitarra.attributes.image.data.attributes.formats.medium.url
+            }
+        })
+    )
+}
+
+const {name, description, price, image} = Astro.props;
+const {id} = Astro.params
+
+---
+<Layout title={`GuitarLA - ${name}`} description={`Guitarras, venta de guitarras, guitarra ${name}`}>
+<main class="contenedor guitarra">
+    <img src={image} alt={`Imagen de la guitarra ${name}`} class="imagen" /> 
+    <div class="contenido">
+        <h3 class="heading">{name}</h3> 
+        <p class="texto"> {description} </p> 
+        <p class="price"> ${price} </p> 
+
+        <form class="formulario" id="formulario">
+            <label for="cantidad">Cantidad</label>
+            <select 
+            
+            
+            name="cantidad" id="cantidad">
+              <option value="0">--Seleccione--</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+      
+            <input value='Agregar al carrito' type="submit"/>
+          </form>
+    </div>
+  </main>
+</Layout>
+
+<script define:vars={{guitarName: name, price, image, id}}>
+
+    let form = document.getElementById('formulario');
+    form.addEventListener('submit', function(e){    
+        e.preventDefault();
+        let quantity = parseInt(document.getElementById('cantidad').value);
+        let cartItems = JSON.parse(localStorage.getItem('cart')) ?? []
+
+        if (cartItems.some(item => item.id === id)) {
+            const newCart = cartItems.map(item => {
+                if (item.id === id) {
+                    item.quantity = quantity;
+                } 
+                return item;
+            });
+            localStorage.setItem('cart', JSON.stringify(newCart))
+        } else {
+            localStorage.setItem('cart', JSON.stringify([...cartItems, {
+                name: guitarName,
+                price, 
+                image, 
+                id, 
+                quantity
+            }]));
+        }
+        window.location.assign('/carrito');
+    })
+    
+</script>

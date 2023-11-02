@@ -1,0 +1,17 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+---
+<Layout title="GuitarLA - No encontrado" description="GuitarLA, blog, tienda de guitarras, venta de guitarras, cursos, no encontrado">
+<div class='contenedor contenido error'>
+    <h3 class='heading'>No encontrado</h3>
+    <p>El recurso solicitado no pudo ser encontrado</p>
+    <button class='btn-notFound'>Retorna a la página anterior</button>
+</div>
+</Layout>
+<script>
+    let buttonReturn = document.getElementsByClassName('btn-notFound')[0];
+    buttonReturn.addEventListener('click', function () {
+        window.location.assign('/');
+    })
+</script>

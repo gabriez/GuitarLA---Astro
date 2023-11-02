@@ -1,0 +1,35 @@
+---
+import {formatDate} from '../../helpers/helper.js'
+import '../../styles/blog.css';
+
+interface Props {
+    data: Array<Object>;
+}
+
+const { data } = Astro.props;
+
+---
+
+<div class="blog">
+    {
+        data.length > 0 && 
+        data.map(
+            (post : any) => (
+            <article class="post">
+                <img class="imagen" src={post.attributes.image.data[0].attributes.formats.small.url} 
+                alt={`Imagen de ${post.attributes.title}`} />
+                <div class="contenido">
+                    <div class="tooltip">
+                        <h3>{post.attributes.title}</h3>
+                        <span class="tooltip-text">{post.attributes.title}</span>
+                    </div>
+                    <p class="fecha">{formatDate(post.attributes.publishedAt)}</p>
+                    <p class="resumen">{post.attributes.content}</p>
+                    <a class='enlace' href={`/blog/${post.attributes.url}`}>Lee el post</a>
+                </div>
+            </article>
+            )
+        )
+    }
+    
+</div>

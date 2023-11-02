@@ -1,0 +1,115 @@
+---
+import Layout from "../layouts/Layout.astro";
+import '../styles/cart.css';
+---
+<Layout title="GuitarLA - Carrito" description="GuitarLa, carrito, blog, tienda de guitarras">
+    <main class="contenedor">
+        <h3 class="heading">Carrito de Compra</h3>
+        <div class="contenido">
+            <div class="carrito" id="carrito">
+                <h3>Artículos</h3>
+                
+            </div>
+
+            <aside class="resumen">
+                <h3>Resumen del pedido</h3>
+                <p id="total">Total a pagar: 0$</p>
+            </aside>
+        </div>
+    </main>
+</Layout>
+
+
+
+<script>
+
+    async function updateItems(e){ 
+            const cartLS = JSON.parse(localStorage.getItem('cart'));
+            
+           
+            const { id } = e.target.dataset;
+
+
+            const quantity = parseInt(e.target.value);
+
+            const newCart = cartLS.map(item => {
+                if (item.id ===id) {
+                    item.quantity = quantity;
+                } 
+                return item;
+            });
+
+            localStorage.setItem('cart', await JSON.stringify(newCart))
+            main();
+    }
+
+    function deleteItems(e){
+        const cartLS = JSON.parse(localStorage.getItem('cart'));
+        const { id } = e.target.dataset;
+
+        const newCart = cartLS.filter(item => item.id !== id);
+        localStorage.setItem('cart', JSON.stringify(newCart))
+        main();
+    }
+
+    function main () {
+        const carrito = document.getElementById('carrito');
+        const cartLS = JSON.parse(localStorage.getItem('cart')) ?? [];
+        const total = document.getElementById('total');
+        if (cartLS.length === 0) {
+            carrito.innerHTML = 'No hay productos en el carrito';
+        } else {
+            function determineSelected (quantity1, quantity2) {
+                return quantity1 === quantity2 ? 'selected' : ''
+            }
+
+            let concatHTML = cartLS.map( producto => `
+                <div class='producto'>
+                    <div>
+                        <img src=${producto.image} alt={"Imagen del producto ${producto.name}"} />
+                    </div>
+                    <div>
+                        <p class="nombre">${producto.name}</p>
+                        <p>Cantidad: </p>
+                        <select class="updateItems"
+                        data-id=${producto.id}
+                        >
+                        <option ${determineSelected(1, producto.quantity)} value="1">1</option>
+                        <option ${determineSelected(2, producto.quantity)} value="2">2</option>
+                        <option ${determineSelected(3, producto.quantity)} value="3">3</option>
+                        <option ${determineSelected(4, producto.quantity)} value="4">4</option>
+                        <option ${determineSelected(5, producto.quantity)} value="5">5</option>
+                        </select>
+                        <p class="precio">Precio: $<span>${producto.price}</span></p>
+                        <p class="subtotal">Subtotal: $<span>${producto.price * producto.quantity}</span></p>
+                    </div>
+                    <button type="button" class="btn_eliminar" data-id=${producto.id}>
+                        X
+                    </button>
+                </div>`
+            ).join('');
+
+            total.innerHTML = `Total a pagar: $${cartLS.reduce((acumulated, producto) => acumulated + (producto.price * producto.quantity), 0)}`;
+
+            carrito.innerHTML = concatHTML;   
+            const updateGuitars = document.getElementsByClassName('updateItems');
+            const deleteGuitars = document.getElementsByClassName('btn_eliminar')
+            for (let i = 0; i < updateGuitars.length; i++) {
+                updateGuitars[i].addEventListener('change', updateItems);
+                deleteGuitars[i].addEventListener('click', deleteItems);
+            } 
+
+            
+        
+
+
+            // e => {
+            // updateQuantity({
+            //     id: producto.id,
+            //     quantity: parseInt(e.target.value)
+            // }
+        }
+    }
+    main();
+
+</script>

@@ -1,0 +1,22 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getPosts } from "../helpers/api-helper";
+import ListPosts from '../components/posts/ListPosts.astro';
+import '../styles/blog.css';
+
+
+const {data} = await getPosts();
+
+
+---
+
+<Layout title="GuitarLA - Nuestro Blog" description="GuitarLA, blog de musica, venta de guitarra">
+	<main class="contenedor">
+        <h2 class="heading">Nuestro blog</h2>    
+        <ListPosts data={data}/>
+	</main>
+</Layout>
+
+<style>
+	
+</style>

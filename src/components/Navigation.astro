@@ -1,0 +1,23 @@
+---
+import { Image } from 'astro:assets';
+import cart from '../img/carrito.png';
+const setActive = (path) => {
+        return Astro.url.pathname === path ? "active" : '';
+    }
+
+---
+
+<nav class="navegacion">
+    <a href='/' class={setActive('/')}>Inicio</a>
+    <a href='/nosotros' class={setActive('/nosotros')}>Nosotros</a>
+    <a href='/tienda' class={setActive('/tienda')}>Tienda</a>
+    <a href='/blog' class={setActive('/blog')}>Blog</a>
+    <a href='/carrito' class={setActive('/carrito')}>
+      <Image src={cart} alt="Carrito"/>
+    </a>
+    
+</nav>
+
+<style>
+
+</style>
